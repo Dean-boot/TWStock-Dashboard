@@ -1,0 +1,40 @@
+name: Deploy TWStock Dashboard
+
+on:
+  schedule:
+    - cron: '0 23 * * *'  # 每日台灣時間 07:00（UTC+0 是 23:00）
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repo
+      uses: actions/checkout@v3
+
+    - name: Generate index.html
+      run: |
+        mkdir -p output
+        echo '<!DOCTYPE html>
+        <html lang="zh-Hant">
+        <head><meta charset="UTF-8"><title>Dean.AI 台股預測儀表板</title></head>
+        <body>
+        <h1>Dean.AI 台股預測儀表板</h1>
+        <p>每日預測圖與建議</p>
+        <img src="https://example.com/2330.png" alt="2330 預測圖"><br>
+        <img src="https://example.com/3711.png" alt="3711 預測圖"><br>
+        <img src="https://example.com/6683.png" alt="6683 預測圖"><br>
+        <footer>更新時間：$(date)</footer>
+        </body>
+        </html>' > index.html
+
+    - name: Commit and Push
+      run: |
+        git config user.name 'github-actions[bot]'
+        git config user.email 'github-actions[bot]@users.noreply.github.com'
+        git add index.html
+        git commit -m "每日自動更新 index.html" || echo "No changes"
+        git push origin main
+      env:
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
