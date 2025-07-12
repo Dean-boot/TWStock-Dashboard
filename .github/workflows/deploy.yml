@@ -26,4 +26,4 @@ jobs:
           git config user.email "dean@example.com"
           git add index.html
           git commit -m "每日自動更新 index.html" || echo "No changes to commit"
-          git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/Dean-boot/TWStock-Dashboard.git HEAD:main
+          git push https://x-access-token:${{ secrets.DeanBot_Auto_Deploy }}@github.com/Dean-boot/TWStock-Dashboard.git HEAD:main
