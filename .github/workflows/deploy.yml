@@ -18,16 +18,39 @@ jobs:
         mkdir -p output
         echo '<!DOCTYPE html>
         <html lang="zh-Hant">
-        <head><meta charset="UTF-8"><title>Dean.AI 台股預測儀表板</title></head>
-        <body>
-        <h1>Dean.AI 台股預測儀表板</h1>
-        <p>每日預測圖與建議</p>
-        <img src="https://example.com/2330.png" alt="2330 預測圖"><br>
-        <img src="https://example.com/3711.png" alt="3711 預測圖"><br>
-        <img src="https://example.com/6683.png" alt="6683 預測圖"><br>
-        <footer>更新時間：$(date)</footer>
-        </body>
-        </html>' > index.html
+        <head>
+          <meta charset="UTF-8">
+          <title>Dean.AI 台股預測儀表板</title>
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <style>
+            body { font-family: sans-serif; padding: 20px; background: #f2f2f2; }
+            .card { background: #fff; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+            h1 { text-align: center; }
+            img { width: 100%; max-width: 600px; height: auto; display: block; margin: 10px auto; }
+            footer { text-align: center; font-size: 0.8em; color: #666; margin-top: 40px; }
+          </style>
+         </head>
+         <body>
+          <h1>Dean.AI 台股預測儀表板</h1>
+
+          <div class="card">
+           <h2>2330 台積電</h2>
+           <img src="https://your-image-source.com/2330.png" alt="2330 預測圖">
+          </div>
+
+          <div class="card">
+           <h2>3711 日月光</h2>
+           <img src="https://your-image-source.com/3711.png" alt="3711 預測圖">
+          </div>
+
+          <div class="card">
+           <h2>6683 雍智科技</h2>
+           <img src="https://your-image-source.com/6683.png" alt="6683 預測圖">
+          </div>
+
+          <footer>更新時間：$(date '+%Y-%m-%d %H:%M:%S') (UTC)</footer>
+         </body>
+         </html>' > index.html
 
     - name: Commit and Push
       run: |
