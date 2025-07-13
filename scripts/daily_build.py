@@ -1,4 +1,40 @@
+import os
 import datetime
+import subprocess
+
+# 自動產生分析資料（你可換成真實分析）
+today = datetime.datetime.now().strftime("%Y-%m-%d")
+analysis_html = f"""
+<div style='background:#f9f9f9;padding:10px;border:1px solid #ccc'>
+  <h2>📊 {today} 台股每日 AI 分析</h2>
+  <ul>
+    <li>00940 ➤ 投資信心比：78%，建議買進比例：65%</li>
+    <li>台積電 ➤ 投資信心比：84%，建議買進比例：70%</li>
+    <li>雍智科技 ➤ 投資信心比：69%，建議買進比例：55%</li>
+    <li>日月光 ➤ 投資信心比：73%，建議買進比例：60%</li>
+  </ul>
+</div>
+"""
+
+# 寫入 index.html（放在最上方）
+with open("index.html", "w", encoding="utf-8") as f:
+    f.write(f"""
+<html>
+  <body>
+    {analysis_html}
+    <p style='color:gray'>更新時間：{datetime.datetime.now()}</p>
+  </body>
+</html>
+""")
+
+print("✅ 已更新 index.html")
+
+# 自動 Git 提交與推送
+os.system('git config user.name "DeanBot"')
+os.system('git config user.email "dean@example.com"')
+os.system("git add index.html")
+os.system('git commit -m "每日自動更新 index.html" || echo "No changes to commit"')
+os.system('git push https://x-access-token:${{GH_TOKEN}}@github.com/Dean-boot/TWStock-Dashboard.git HEAD:main')import datetime
 
 stock_data = [
     {
