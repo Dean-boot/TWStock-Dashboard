@@ -1,0 +1,37 @@
+name: Auto Deploy TWStock Dashboard
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 23 * * *' # 台灣時間 07:00 (UTC+0 → +8)
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install Dependencies
+        run: |
+          pip install -r requirements.txt || true  # 若無 requirements.txt 不會報錯
+
+      - name: Run Daily Build Script
+        run: python daily_build.py
+
+      - name: Commit and Push index.html
+        run: |
+          git config user.name "DeanBot"
+          git config user.email "dean@example.com"
+          git add index.html
+          git commit -m "🤖 自動更新 index.html - $(date '+%Y-%m-%d %H:%M:%S')" || echo "No changes to commit"
+          git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/Dean-boot/TWStock-Dashboard.git HEAD:main
