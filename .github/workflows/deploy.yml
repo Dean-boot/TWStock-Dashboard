@@ -3,7 +3,7 @@ name: Deploy TWStock Dashboard
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 23 * * *' # 台灣時間 07:00
+    - cron: '0 23 * * *' # 台灣時間 07:00 自動部署（UTC+0）
 
 permissions:
   contents: write
@@ -13,16 +13,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      - name: Checkout Repo
         uses: actions/checkout@v3
 
-      - name: Generate index.html
+      - name: Setup Git User
         run: |
-          mkdir -p out
-          echo "<html><body><h1>TWStock Dashboard 自動更新成功</h1><p>更新時間：$(TZ='Asia/Taipei' date)</p></body></html>" > out/index.html
+          git config user.name "DeanBot"
+          git config user.email "dean@example.com"
 
-      - name: Deploy to gh-pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./out
+      - name: Create index.html
+        run: |
+          echo "<html><body><h1>TWStock Dashboard 自動更新成功</h1><p>更新時間（UTC）：$(date -u)</p></body></html>" > index.html
+
+      - name: Commit and Push to gh-pages
+        run: |
+          git checkout --orphan gh-pages
+          git reset
+          git add index.html
+          git commit -m "每日自動部署 gh-pages"
+          git push --force https://x-access-token:${{ secrets.DeanBot_Auto_Deploy }}@github.com/Dean-boot/TWStock-Dashboard.git gh-pages
